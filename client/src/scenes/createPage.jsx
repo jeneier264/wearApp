@@ -6,13 +6,14 @@ import { useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
-import { setAddRemoveFavourites } from "../state";
+import { setAddRemoveFavourites, setAddRemoveUploads } from "../state";
 import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   AddCircleOutlineRounded,
   CloudUploadOutlined,
 } from "@mui/icons-material";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 
 const CreatePage = ({ isDraft = false, isItem = false }) => {
   let emptyArray = [];
@@ -46,14 +47,14 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
   function handleClickCategory(event) {
     setSelectedCategory(event.currentTarget.value);
     setIsMainShown((current) => !current);
-  }
+  };
 
   function getFilteredList() {
     if (!selectedCategory) {
       return itemList;
     }
     return itemList.filter((item) => item.category === selectedCategory);
-  }
+  };
 
   var filteredList = useMemo(getFilteredList, [selectedCategory, itemList]);
 
@@ -85,7 +86,7 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
       img: imgOrigin.src,
     };
     return Item;
-  }
+  };
 
   function handleClickItem(event) {
     setIsItemSelected(true);
@@ -93,7 +94,22 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
       ...ItemsForCanvasArray,
       formItemObject(event.currentTarget.value),
     ]);
-  }
+  };
+
+  async function hadleRemoveUpload(event) {
+    var response = await fetch(`http://localhost:3001/users/${_id}/upload`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          imgUrl: event.currentTarget.value,
+        }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      const data = await response.json();
+      dispatch(setAddRemoveUploads({uploads: data}));
+  };
 
   useEffect(() => {
     if (isItem) {
@@ -323,9 +339,12 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
                           </button>
                         </div>
                         {isHovering === index ? (
-                          <div className="flex justify-center">
+                          <div className="flex justify-between">
                             <button value={item} onClick={handleClickItem}>
                               <AddCircleOutlineRounded sx={{ fontSize: 25 }} />
+                            </button>
+                            <button value={item} onClick={hadleRemoveUpload}>
+                              <DeleteRoundedIcon sx={{ fontSize: 25 }} />
                             </button>
                           </div>
                         ) : null}

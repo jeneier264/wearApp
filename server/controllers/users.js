@@ -79,14 +79,19 @@ export const addRemoveFavourites = async (req, res) => {
   }
 };
 
-export const addUploads = async (req, res) => {
+export const addRemoveUploads = async (req, res) => {
   try {
     const { id } = req.params;
     const { imgUrl } = req.body;
     const user = await User.findById(id);
-    user.uploads.push( imgUrl );
+    if(user.uploads.includes(imgUrl)) {
+      user.uploads = user.uploads.filter(function(obj) { return obj !== imgUrl});
+    } else {
+      user.uploads.push( imgUrl );
+    }
+
     await user.save();
-   
+
     const formattedUploads = user.uploads.map(
       (upload) => {
         return upload;
