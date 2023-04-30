@@ -12,16 +12,16 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const [isTherePosts, setIsTherePosts] = useState(false);
-  
 
+  var postsArr = [...posts];
+  postsArr.sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime(),);
+  
   const getPosts = async () => {
     const response = await fetch("http://localhost:3001/posts", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
-
     const data = await response.json();
-    
     dispatch(setPosts({ posts: data }));
     if(data.length !== 0) setIsTherePosts(true);
   };
@@ -34,11 +34,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-
     const data = await response.json();
-    
     dispatch(setPosts({ posts: data }));
-
     if(data.length !== 0) setIsTherePosts(true);
   };
 
@@ -55,7 +52,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     <>
       {isTherePosts ? (
         <div className={posts.length === 1 ? `${styles.grid1}` : `${styles.grid2}`}>
-          {posts.map(
+          {postsArr.map(
             ({
               _id,
               userId,

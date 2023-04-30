@@ -23,12 +23,13 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
   const dispatch = useDispatch();
   const [isMainShown, setIsMainShown] = useState(true);
   const [favouriteSection, setFavouriteSection] = useState(false);
+  const [uploadsSection, setUploadsSection] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
   const [isItemSelected, setIsItemSelected] = useState(false);
   const [ItemsForCanvasArray, setItemsForCanvasArray] = useState(emptyArray);
   const [isHovering, setIsHovering] = useState(-1);
   const { draftId } = useParams();
-  const { _id, favourites } = useSelector((state) => state.user);
+  const { _id, favourites, uploads } = useSelector((state) => state.user);
   const isFavourite = favourites
     .filter((el) => el.type === "item")
     .map((el) => el.id);
@@ -70,8 +71,8 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
 
   function formItemObject(itemId) {
     var imgOrigin = new Image();
-    imgOrigin.src = itemList.find((el) => el.id == itemId).image;
-    var originalIndex = itemList.find((el) => el.id == itemId).id;
+    imgOrigin.src = (itemId.startsWith("http") ? itemId : itemList.find((el) => el.id == itemId).image);
+    var originalIndex = (itemId.startsWith("http") ? "upload" : itemList.find((el) => el.id == itemId).id);
     var imgWidth = imgOrigin.naturalWidth * 0.25;
     var imgHeight = imgOrigin.naturalHeight * 0.25;
     var Item = {
@@ -117,7 +118,7 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
             items={ItemsForCanvasArray}
             isItemSelected={setIsItemSelected}
             setItems={setItemsForCanvasArray}
-            draftId={draftId} 
+            draftId={draftId}
           />
         ) : (
           <div
@@ -134,7 +135,7 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
         <div
           className={`flex-col ${styles.canavsSection2} ${styles.flexCenter} justify-between`}
         >
-          {isMainShown && !favouriteSection && (
+          {isMainShown && !favouriteSection && !uploadsSection && (
             <div>
               <div className="flex-row ">
                 <p className={`${styles.paragraph1} p-2`}>Categories</p>
@@ -161,10 +162,10 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
               <hr className="flex my-4 mx-auto h-[0.5px] w-3/4 p-0 border-1 border-black" />
               <div className="flex flex-row justify-between ">
                 <FileUploader />
-                <div className="flex flex-col justify-between pr-3 cursor-pointer items-center">
+                <bitton onClick={() => setUploadsSection(!uploadsSection)} className="flex flex-col justify-between pr-3 cursor-pointer items-center">
                   <CloudUploadOutlined sx={{ fontSize: 30 }} />
                   <p className={`${styles.paragraph3}`}>My uploads</p>
-                </div>
+                </bitton>
                 <button
                   onClick={() => setFavouriteSection(!favouriteSection)}
                   className="flex flex-col justify-between cursor-pointer items-center"
@@ -197,7 +198,7 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
               </div>
             </div>
           )}
-          {!isMainShown && !favouriteSection && (
+          {!isMainShown && !favouriteSection && !uploadsSection && (
             <div>
               <div className="sticky top-0  h-6 bg-white bg-opacity-50 flex flex-row justify-center">
                 <button
@@ -288,6 +289,47 @@ const CreatePage = ({ isDraft = false, isItem = false }) => {
                         ) : null}
                       </div>
                     )
+                )}
+              </div>
+            </div>
+          )}
+          {uploadsSection && (
+            <div>
+              <div className="sticky top-0  h-6 bg-white bg-opacity-50 flex flex-row justify-center">
+                <button
+                  value={null}
+                  onClick={() => setUploadsSection(!uploadsSection)}
+                  className={`p-2 justify-self-start hover:underline`}
+                >
+                  <p className={`${styles.paragraph1}`}>Go back</p>
+                </button>
+              </div>
+              <div className="p-6 grid gap-x-7 gap-y-4 grid-cols-3 justify-between">
+                {uploads.map(
+                  (item, index) =>
+                      <div
+                        className="container h-[70px] w-[140px] p-3 m-3"
+                        onMouseOver={() => handleMouseOver(index)}
+                        onMouseOut={handleMouseOut}
+                      >
+                        <div className="flex justify-center">
+                          <button value={item} onClick={handleClickItem}>
+                            <img
+                              key={item}
+                              src={item}
+                              alt={item}
+                              className={`cursor-pointer object-center h-[70px]`}
+                            ></img>
+                          </button>
+                        </div>
+                        {isHovering === index ? (
+                          <div className="flex justify-center">
+                            <button value={item} onClick={handleClickItem}>
+                              <AddCircleOutlineRounded sx={{ fontSize: 25 }} />
+                            </button>
+                          </div>
+                        ) : null}
+                      </div>
                 )}
               </div>
             </div>

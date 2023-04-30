@@ -49,7 +49,7 @@ const styles = {
     postWidget: "w-[450px] h-[250x] flex flex-col justify-between bg-white p-3 m-2 rounded-2xl",
     grid1: "grid grid-cols-1 gap-4 justify-center",
     grid2: "grid grid-cols-2 gap-4 justify-center",
-    draftWidget: "w-[350px] h-[200x] flex flex-col bg-pink-50 p-3 m-2 rounded-2xl",
+    draftWidget: "w-[350px] h-[200x] flex flex-col bg-white p-3 m-2 rounded-2xl",
 
     itemContainer: "container w-[200px] h-[200px] p-3 m-3 bg-white rounded-2xl",
     itemsWidget: "bg-gradient-to-t from-gradient via-gradient to-primary",

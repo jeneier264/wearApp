@@ -111,7 +111,6 @@ const Canvas = ({
       const canvases = await response.json();
       dispatch(setCanvases({ canvases }));
     }
-
     setSucces(true);
   };
 

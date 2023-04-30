@@ -48,13 +48,13 @@ const upload = multer({ storage: storage });
 
 /* routes with files */
 app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/posts", verifyToken, createPost);
 app.post("/canvases", createCanvas);
 
 /* routes */
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use("/posts", postRoutes); /* stopped here on 1.14 */
+app.use("/posts", postRoutes); 
 app.use("/canvases", canvasRoutes);
 
 

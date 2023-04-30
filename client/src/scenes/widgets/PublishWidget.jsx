@@ -54,7 +54,7 @@ const PublishWidget = ({ handleClose, canvas, items, fromDraft = null }) => {
         title: title,
         description: post,
         canvasPicture: imgUrl,
-        items: items,
+        items: items.filter((item) => item.id !== 'upload'),
         isPost: true,
       }),
     });

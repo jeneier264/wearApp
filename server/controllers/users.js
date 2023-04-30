@@ -79,6 +79,25 @@ export const addRemoveFavourites = async (req, res) => {
   }
 };
 
+export const addUploads = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { imgUrl } = req.body;
+    const user = await User.findById(id);
+    user.uploads.push( imgUrl );
+    await user.save();
+   
+    const formattedUploads = user.uploads.map(
+      (upload) => {
+        return upload;
+      }
+    );
+    res.status(200).json(formattedUploads);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 export const follow = async (req, res) => {
   const { id, userId } = req.params; // id - user to follow, userId - current user
   if (userId !== id) {

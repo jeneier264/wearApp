@@ -71,7 +71,14 @@ export const authSlice = createSlice({
       if (state.user) {
         state.user.favourites = action.payload.favourites;
       } else {
-        console.error("user friends non-existent :(");
+        console.error("user's favourites non-existent :(");
+      }
+    },
+    setAddRemoveUploads: (state, action) => {
+      if (state.user) {
+        state.user.uploads = action.payload.uploads;
+      } else {
+        console.error("user's uploads non-existent :(");
       }
     },
   },
@@ -89,5 +96,6 @@ export const {
   setDraftItems,
   setAddRemoveFavourites,
   setItemForCanvas,
+  setAddRemoveUploads,
 } = authSlice.actions;
 export default authSlice.reducer;

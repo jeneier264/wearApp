@@ -33,6 +33,10 @@ const UserSchema  = new mongoose.Schema(
         favourites: {
             type: Array,
             default: [],
+        },
+        uploads: {
+            type: Array,
+            default: [],
         }
     },
     {timestamps: true}

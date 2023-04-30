@@ -34,7 +34,7 @@ const ItemWidget = ({ id, image }) => {
     dispatch(setAddRemoveFavourites({ favourites: data }));
   };
   const handleAddToCanvas = () => {
-    dispatch(setItemForCanvas({itemForCanvas: id}));
+    dispatch(setItemForCanvas({itemForCanvas: String(id)}));
     navigate('/create/item');
   };
   return (
